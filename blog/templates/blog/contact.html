@@ -1,0 +1,70 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+
+<!--{% block msg %}
+{% if messages %}
+{% for message in messages %}
+<div {% if message.tags %} class="alert alert-{{message..tags}}
+alert-dismissible fade show" {% endif %}>
+<strong>{{message}}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+ {% endfor %}
+ {% endif %}
+{% endblock msg %}-->
+<div class="col-sm-10">
+    <h3  class="text-Black my-5" > Contact </h3>
+
+        {% ifequal request.user.username "admin" %}
+           {% for contact in contacts %}
+              
+        <p>
+      
+         <h5> {{contact.firstname}}
+          {{contact.lastname}}</h5>
+          {{contact.message}}
+        </p>
+        
+      {% empty %}
+          <p>No messages from user</p>
+          {% endfor %}
+          
+          {% else %}
+          <form class="row g-3" method="post" action="">
+            {% csrf_token %}
+            <!---- {{form.as_p}}-->
+              <div class="row">
+                  <div class="col-md-6">
+                    <input type="text" name='firstname' class="form-control" placeholder="First name" aria-label="First name" required>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" name='lastname' class="form-control" placeholder="Last name" aria-label="Last name" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                <!---- <label for="inputEmail4" class="form-label">Email</label>-->
+                  <input type="email" name='email' class="form-control" placeholder="Email"  id="inputEmail4" required>
+                </div>
+                <div class="col-md-6">
+                 
+                  <input type="text" name='phone_no' class="form-control" placeholder="Phone no" id="inputCity" required>
+                </div>
+                <div class="mb-3">
+                  <div class="col-md-6">
+                    <textarea type="text" name='message' class="form-control" placeholder="Write About Us" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                   <!---- <input type="text" class="form-control" placeholder="Write About Us" id="inputCity">-->
+                  </div>
+                  </div>
+                  <div class="col-md-9">
+                  <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+                </div>
+              </div>
+      
+        {% endifequal %}
+          
+        
+</div>
+{% endblock content %}

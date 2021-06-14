@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %}
+{% load static%}
+{% block content %}
+
+
+
+<form action="{% url 'search'%}">
+<div class="container my-3">
+    <h2>Search results : </h2>
+    {% for post in posts  %}
+    <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 my-4 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+         <!----  <strong class="d-inline-block mb-2 text-primary"></strong>-->
+            <h3 class="mb-0">{{post.title}}</h3>
+            <div class="mb-1 text-muted">{{post.date_added}}</div>
+            <p class="card-text mb-auto">{{post.desc| truncatechars:500}}</p>
+            <div class="my-2">
+            	
+            </div>
+            
+        </div>
+        
+        </div>
+        {% empty %}
+        <h1>No result found</h1>
+        {% endfor %}
+    
+    </div>
+</form>
+ {% endblock %}

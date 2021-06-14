@@ -1,0 +1,107 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+
+{% block msg %}
+{% if messages %}
+{% for message in messages %}
+<div {% if message.tags %} class="alert alert-{{message..tags}}
+alert-dismissible fade show" {% endif %}>
+<strong>{{message}}</strong>
+ <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+ {% endfor %}
+ {% endif %}
+{% endblock msg %}
+
+{% block content %}
+<div class="col-sm-10">
+    <h3 class="text-dark my-5"> Dashboard</h3>
+    <div>
+    <a href="{% url 'addpost'%}" class="btn btn-success">Add Post</a>
+    </div>
+    <h4 class="text-center alert alertinfo mt-3">Show Post</h4>
+    {% if posts %}
+    <table class="table table-hover bg-black">
+    
+        <tbody>
+            {% for post in posts%}
+            
+              <strong> <p>{{post.id}}</p></strong>
+               <strong> <p>{{post.title}}</p></strong>
+               <strong> <p>{{post.date_added}}</p></strong>
+                <p>{{post.desc}}</p>
+
+                
+                <div class="text-center">
+                    {%ifequal request.user.username "admin" %}
+                    <a href="{% url 'updatepost' post.id%}" class="btn btn-warning btn-sm">Edit</a>
+                    {% endifequal %}
+                    {% if perms.blog.delete_post %}
+                    <form action="{% url 'deletepost' post.id %}" method="post" class="d-inline">
+                        {% csrf_token%}
+                        <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+                      
+                    </form>
+                
+                    {% endif %}
+               
+                </td>
+                <tr>
+                    <br>
+                    <br>
+                    <br>
+                    <div>
+                        <a type="button" class ="btn btn-outline-success" href="{% url 'add_comment' pk=post.pk%}">Add Comment</a>
+                       </div>
+                </tr>
+                
+                <tr>
+                    
+                {% for comment in post.comments.all %}
+                <tr>
+                {% if user.is_authenticated or comment.approved_comment %}
+                 <div class="comment">
+                    <div class="date">
+                       
+                        {% if not comment.approved_comment %}
+                            <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+                        {% endif %}
+                    </div>
+        
+                    <strong>{{ comment.author }}</strong>
+                    
+                    <p>{{ comment.text|linebreaks }}</p>
+                    
+                    
+                   <p> {{ comment.created_date }}</p>
+                   {%ifequal request.user.username "admin" %}
+                   <form action="{% url 'comment_remove' comment.id %}" method="post" class="d-inline">
+                     {% csrf_token%}
+                     <input type="submit" class="btn btn-outline-danger" value="Delete">
+                   
+                 </form>
+ 
+                   {% endifequal %}
+                </div>
+
+                
+                {% endif %}
+            {% empty %}
+                <p>No comments here yet :(</p>
+            {% endfor %}
+            </tr>
+              
+            {% endfor %}     
+        </tbody>    
+    </table>
+    {% else %}
+    <h4 class="text-center alert alert-warning">No Records</h4>
+    {% endif %}
+
+</div>
+{% endblock content  %}
+      
